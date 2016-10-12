@@ -172,12 +172,13 @@ var Engine = (function(global) {
                 ctx.drawImage(Resources.get(rowImages[row]), col * 101, row * 83);
             }
         }
-      
+                
         ctx.drawImage(Resources.get("images/Star.png"), 909, 70);
         ctx.drawImage(Resources.get("images/Rock.png"), 909, 141);
         ctx.drawImage(Resources.get("images/Rock.png"), 706, 141);
         ctx.drawImage(Resources.get("images/Selector.png"), 0, 460);                
-                    
+        game.instructionsBanner();
+      
         renderEntities();
     }
 

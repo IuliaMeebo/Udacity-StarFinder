@@ -176,7 +176,7 @@ var Game = function() {
     ctx.fillStyle = "#ffe070";
     ctx.fillRect(1000, 0, 10, 50);
     
-    ctx.font = "25px Helvetica";
+    ctx.font = "bold 25px Helvetica";
     ctx.fillStyle = "#4d4e53";
     ctx.fillText("GET THE POWER OF THE STAR AND BRING IT HOME", 20, 35);
   };
@@ -191,9 +191,27 @@ var Game = function() {
     ctx.fillStyle = "#ffe070";
     ctx.fillRect(1000, 0, 10, 50);
     
-    ctx.font = "25px Helvetica";
+    ctx.font = "bold 25px Helvetica";
     ctx.fillStyle = "#4d4e53";
     ctx.fillText("I'VE GOT THE POWER, LETS GO HOME", 20, 35);
+  };
+  
+  this.instructionsBanner = function() {
+    
+    var heightPosition = (689 - 20);
+    
+    ctx.fillStyle = "#fff4cc";
+    ctx.fillRect(0, heightPosition, 1010, 50);
+
+    ctx.fillStyle = "#ffe070";
+    ctx.fillRect(0, heightPosition, 10, 50);
+
+    ctx.fillStyle = "#ffe070";
+    ctx.fillRect(1000, heightPosition, 10, 50);
+    
+    ctx.font = "bold 15px Helvetica";
+    ctx.fillStyle = "#4d4e53";
+    ctx.fillText("ESC => MAIN MENU", 20, heightPosition + 15);
   };
   
   //Method to be overriden on the engine to launch main method
@@ -201,77 +219,76 @@ var Game = function() {
   
   this.render = function() {
     //Defined this of Game
-    var myGame = this;  
-
-    myGame.ctx.font = "48px Impact";
-    myGame.ctx.fillStyle = "#f5f5f5";
-    myGame.ctx.strokeStyle = "#000000";
-    myGame.ctx.lineWidth = 2;
-
+    var myGame = this;      
     var imagesLength = myGame.characters.length * 101;
     var marginPosition = myGame.canvas.width / 2 - imagesLength / 2; 
     var startPosition = myGame.canvas.width / 2 - imagesLength / 2;
 
     var bgImage = new Image();
     bgImage.onload = function() {
-      ctx.drawImage(bgImage,0,0);
-
-      ctx.fillText("SELECT YOUR CHARACTER",startPosition, 70);
-      ctx.strokeText("SELECT YOUR CHARACTER",startPosition, 70);
+      myGame.ctx.drawImage(bgImage,0,0);
+      
+      myGame.ctx.font = "48px Impact";
+      myGame.ctx.fillStyle = "#f5f5f5";
+      myGame.ctx.strokeStyle = "#000000";
+      myGame.ctx.lineWidth = 2;
+      
+      myGame.ctx.fillText("SELECT YOUR CHARACTER",startPosition, 70);
+      myGame.ctx.strokeText("SELECT YOUR CHARACTER",startPosition, 70);
 
       for(var i=0; i<myGame.characters.length; i++) {
         var image = new Image();
         image.character = myGame.characters[i];
         image.onload = function() {
-          ctx.drawImage(this, startPosition, 50);         
-          ctx.fillText(this.character.id , startPosition + 40, 230);
-          ctx.strokeText(this.character.id , startPosition + 40, 230);        
+          myGame.ctx.drawImage(this, startPosition, 50);         
+          myGame.ctx.fillText(this.character.id , startPosition + 40, 230);
+          myGame.ctx.strokeText(this.character.id , startPosition + 40, 230);        
           startPosition = startPosition + 101;
         };
         image.src = image.character.pic;
-      }
+      }      
+      
+      myGame.ctx.fillText("SELECT LEVEL",startPosition, 312);
+      myGame.ctx.strokeText("SELECT LEVEL",startPosition, 312);
 
-      ctx.fillText("SELECT LEVEL",startPosition, 312);
-      ctx.strokeText("SELECT LEVEL",startPosition, 312);
+      myGame.ctx.font = "30px Impact";      
+      
+      myGame.ctx.fillText("1. EASY",startPosition, 370);
+      myGame.ctx.strokeText("1. EASY",startPosition, 370);
 
-      ctx.font = "30px Impact";
+      myGame.ctx.fillText("2. MEDIUM",startPosition, 420);
+      myGame.ctx.strokeText("2. MEDIUM",startPosition, 420);
 
-      ctx.fillText("1. EASY",startPosition, 370);
-      ctx.strokeText("1. EASY",startPosition, 370);
+      myGame.ctx.fillText("3. HARDCORE",startPosition, 470);
+      myGame.ctx.strokeText("3. HARDCORE",startPosition, 470);
 
-      ctx.fillText("2. MEDIUM",startPosition, 420);
-      ctx.strokeText("2. MEDIUM",startPosition, 420);
-
-      ctx.fillText("3. HARDCORE",startPosition, 470);
-      ctx.strokeText("3. HARDCORE",startPosition, 470);
-
-      ctx.font = "48px Impact";
+      myGame.ctx.font = "48px Impact";
 
       var selectionLeft = marginPosition + 58;
 
       //SELECT CHARACTER
-      ctx.fillText("SELECT YOUR CHARACTER", selectionLeft, 570);
-      ctx.strokeText("SELECT YOUR CHARACTER", selectionLeft, 570);
+      myGame.ctx.fillText("SELECT YOUR CHARACTER", selectionLeft, 570);
+      myGame.ctx.strokeText("SELECT YOUR CHARACTER", selectionLeft, 570);
 
       //SELECT LEVEL
-      ctx.fillText("SELECT YOUR LEVEL", selectionLeft, 620);
-      ctx.strokeText("SELECT YOUR LEVEL", selectionLeft, 620);
+      myGame.ctx.fillText("SELECT YOUR LEVEL", selectionLeft, 620);
+      myGame.ctx.strokeText("SELECT YOUR LEVEL", selectionLeft, 620);
 
-      ctx.fillText("PRESS SPACEBAR", selectionLeft, 670);            
-      ctx.strokeText("PRESS SPACEBAR", selectionLeft, 670);
+      myGame.ctx.fillText("PRESS SPACEBAR", selectionLeft, 670);            
+      myGame.ctx.strokeText("PRESS SPACEBAR", selectionLeft, 670);
 
       //SELECTED CHARACTER    
       var selectedCharacter = new Image();
       selectedCharacter.onload = function() {
-        ctx.drawImage(this, marginPosition, 520, 48, 48);
+        ctx.drawImage(this, marginPosition, 520, 28, 48);
       }
       selectedCharacter.src = myGame.character.pic;
 
       //SELECTED LEVEL
-      ctx.fillStyle = "#000000";
-      ctx.strokeStyle = "#ffffff";
-      ctx.strokeText(myGame.level.id , marginPosition, 620);
-      ctx.fillText(myGame.level.id, marginPosition, 620);
+      myGame.ctx.fillStyle = "#000000";
+      myGame.ctx.strokeStyle = "#f5f5f5";
+      myGame.ctx.strokeText(myGame.level.id , marginPosition, 620);
+      myGame.ctx.fillText(myGame.level.id, marginPosition, 620);
     }
 
     bgImage.src = "images/bg.jpg";
@@ -383,28 +400,30 @@ var Player = function() {
   
   //check the player position for the star
   this.update = function() {    
-    //Render banners    
-    if(this.hasStar) {
-      game.powerBanner();  
+    if(game.isRunning) {        
+      //Render banners    
+      if(this.hasStar) {
+        game.powerBanner();  
+      }
+      else
+      {
+        game.banner();
+      }
+
+      //If you've got the star set star true to render the player with the star
+      if(!this.isValid(game.starCoordinates) && this.hasStar == false) {
+        player.hasStar = true;
+      }
+
+      //If you've won go back to 
+      //main menu and put star back to the top
+      if(!this.isValid(game.winningCoordinates) && this.hasStar) {  
+        this.hasStar = false;
+        this.goHome();
+        game.stop();
+        game.render();
+      }
     }
-    else
-    {
-      game.banner();
-    }
-    
-    //If you've got the star set star true to render the player with the star
-    if(!this.isValid(game.starCoordinates) && this.hasStar == false) {
-      player.hasStar = true;
-    }
-    
-    //If you've won go back to 
-    //main menu and put star back to the top
-    if(!this.isValid(game.winningCoordinates) && this.hasStar) {  
-      this.hasStar = false;
-      this.goHome();
-      game.stop();
-      game.render();
-    }    
   };
   
   //Render player on the screen
