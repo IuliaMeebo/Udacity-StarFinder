@@ -1,5 +1,13 @@
+/**
+* @description class that implements game main menu,
+* characters, difficulty levels, invalid coordinates,
+* star coordinates and winning coordinates
+**/
 var Game = function() {  
-  //List of charaters to be selected on the main menu
+  /**
+  * @description list of available characters
+  * @return array of character objects
+  **/
   this.characters = [{
       id: 'A',
       pic: "images/char-boy.png"  
@@ -20,8 +28,11 @@ var Game = function() {
       id: 'E',
       pic: "images/char-princess-girl.png"
   }];
-  
-  //Lis of difficulty levels to be selected on the main menu
+    
+  /**
+  * @description list of available difficulty levels
+  * @return array of level objects
+  **/
   this.levels = [
     {
       id: '1',
@@ -36,20 +47,28 @@ var Game = function() {
       name: "Hardcore"
   }];
   
-  //Default character
+  /**
+  * @description selected character
+  * @return selected character object
+  **/
   this.character = {
     id: "A",
     pic: "images/char-boy.png"  
   };
-  
-  //Default level
+    
+  /**
+  * @description selected difficulty level
+  * @return difficulty level object
+  **/
   this.level = {
     id: 1, 
     name: "Easy"
   };
-  
-  //Invalid coordinates for the up key
-  //obstacles are in those coordinates
+    
+  /**
+  * @description invalid UP coordinates
+  * @return array of coordinates object
+  **/
   this.invalidUpCoordinates = [{
       x: 707,
       y:238
@@ -58,9 +77,11 @@ var Game = function() {
       x: 909,
       y: 238
   }];
-  
-  //Invalid coordinates for the down key
-  //obstacles are in those coordinates
+    
+  /**
+  * @description invalid DOWN coordinates
+  * @return array of coordinates object
+  **/
   this.invalidDownCoordinates = [{
     x:707,
     y:72
@@ -70,15 +91,19 @@ var Game = function() {
     y:72
   }];
   
-  //Invalid coordinates for the left key
-  //obstacles are in those coordinates
+  /**
+  * @description invalid LEFT coordinates
+  * @return array of coordinates object
+  **/
   this.invalidLeftCoordinates = [{
     x:808,
     y:155
   }];
   
-  //Invalid coordinates for the right key
-  //obstacles are in those coordinates
+  /**
+  * @description invalid RIGHT coordinates
+  * @return array of coordinates object
+  **/
   this.invalidRightCoordinates = [{
     x:606,
     y:155
@@ -88,14 +113,19 @@ var Game = function() {
     y:155
   }];
   
-  //Star power coordinates
+  /**
+  * @description star power coordinates
+  * @return array of coordinates object
+  **/
   this.starCoordinates = [{
     x:909,
     y:72
   }];
   
-  //Winning coordinates
-  //Coordinates to bring the star power back
+  /**
+  * @description winning coordinates
+  * @return array of coordinates object
+  **/
   this.winningCoordinates = [{
     x:0,
     y:487
@@ -103,7 +133,11 @@ var Game = function() {
   
   this.isRunning = true;
   
-  //Find character by Id, if it does not exist return undefined
+  /**
+  * @description find single character object by Id
+  * @param {string} id - Character Id
+  * @return character object
+  **/
   this.findCharacter = function(id) {
     for(var i=0; i< this.characters.length; i++) {
       if(this.characters[i].id.toLowerCase() === id.toLowerCase()) {
@@ -113,7 +147,11 @@ var Game = function() {
     return undefined;
   };
   
-  //Find level by Id, if it does not exist return undefined
+  /**
+  * @description find single difficulty level by Id
+  * @param {string} id - level Id
+  * @return level object
+  **/
   this.findLevel = function(id) {
     for(var i=0; i< this.levels.length; i++) {
       if(this.levels[i].id.toLowerCase() === id.toLowerCase()) {
@@ -122,6 +160,7 @@ var Game = function() {
     }
     return undefined;  
   };
+  
   
   this.handleInput = function(key) {
     var character = this.findCharacter(key);
