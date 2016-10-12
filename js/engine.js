@@ -26,7 +26,7 @@ var Engine = (function(global) {
         lastTime;
 
     canvas.width = 1010;
-    canvas.height = 707;
+    canvas.height = 689;
     doc.body.appendChild(canvas);
           
     /* This function serves as the kickoff point for the game loop itself
@@ -71,7 +71,7 @@ var Engine = (function(global) {
       game.render();
       
       game.launch = function() {        
-        this.ctx.fillStyle = "#ffffff";
+        this.ctx.fillStyle = "#f5f5f5";
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         allEnemies = [];
         
@@ -176,8 +176,8 @@ var Engine = (function(global) {
         ctx.drawImage(Resources.get("images/Star.png"), 909, 70);
         ctx.drawImage(Resources.get("images/Rock.png"), 909, 141);
         ctx.drawImage(Resources.get("images/Rock.png"), 706, 141);
-        ctx.drawImage(Resources.get("images/Selector.png"), 0, 460);
-      
+        ctx.drawImage(Resources.get("images/Selector.png"), 0, 460);                
+                    
         renderEntities();
     }
 
@@ -201,7 +201,10 @@ var Engine = (function(global) {
      * those sorts of things. It's only called once by the init() method.
      */
     function reset() {
-        // noop        
+        var elem = document.getElementsByTagName('body');
+        if (elem.requestFullscreen) {
+          elem.requestFullscreen();
+        }
     }
 
     /* Go ahead and load all of the images we know we're going to need to

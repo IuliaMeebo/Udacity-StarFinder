@@ -1,6 +1,5 @@
-var Game = function() {
-  //
-  //List of charaters
+var Game = function() {  
+  //List of charaters to be selected on the main menu
   this.characters = [{
       id: 'A',
       pic: "images/char-boy.png"  
@@ -22,7 +21,7 @@ var Game = function() {
       pic: "images/char-princess-girl.png"
   }];
   
-  //Lis of levels
+  //Lis of difficulty levels to be selected on the main menu
   this.levels = [
     {
       id: '1',
@@ -49,6 +48,8 @@ var Game = function() {
     name: "Easy"
   };
   
+  //Invalid coordinates for the up key
+  //obstacles are in those coordinates
   this.invalidUpCoordinates = [{
       x: 707,
       y:238
@@ -58,6 +59,8 @@ var Game = function() {
       y: 238
   }];
   
+  //Invalid coordinates for the down key
+  //obstacles are in those coordinates
   this.invalidDownCoordinates = [{
     x:707,
     y:72
@@ -67,11 +70,15 @@ var Game = function() {
     y:72
   }];
   
+  //Invalid coordinates for the left key
+  //obstacles are in those coordinates
   this.invalidLeftCoordinates = [{
     x:808,
     y:155
   }];
   
+  //Invalid coordinates for the right key
+  //obstacles are in those coordinates
   this.invalidRightCoordinates = [{
     x:606,
     y:155
@@ -81,11 +88,14 @@ var Game = function() {
     y:155
   }];
   
+  //Star power coordinates
   this.starCoordinates = [{
-    x:0,
-    y:487
+    x:909,
+    y:72
   }];
   
+  //Winning coordinates
+  //Coordinates to bring the star power back
   this.winningCoordinates = [{
     x:0,
     y:487
@@ -100,7 +110,6 @@ var Game = function() {
         return this.characters[i];
       }
     }
-
     return undefined;
   };
   
@@ -111,7 +120,6 @@ var Game = function() {
         return this.levels[i];
       }
     }
-
     return undefined;  
   };
   
@@ -157,6 +165,37 @@ var Game = function() {
     this.isRunning = true;    
   }
   
+  
+  this.banner = function() {
+    ctx.fillStyle = "#fff4cc";
+    ctx.fillRect(0,0, 1010, 50);
+
+    ctx.fillStyle = "#ffe070";
+    ctx.fillRect(0,0, 10, 50);
+
+    ctx.fillStyle = "#ffe070";
+    ctx.fillRect(1000, 0, 10, 50);
+    
+    ctx.font = "25px Helvetica";
+    ctx.fillStyle = "#4d4e53";
+    ctx.fillText("GET THE POWER OF THE STAR AND BRING IT HOME", 20, 35);
+  };
+  
+  this.powerBanner = function() {
+    ctx.fillStyle = "#fff4cc";
+    ctx.fillRect(0,0, 1010, 50);
+
+    ctx.fillStyle = "#ffe070";
+    ctx.fillRect(0,0, 10, 50);
+
+    ctx.fillStyle = "#ffe070";
+    ctx.fillRect(1000, 0, 10, 50);
+    
+    ctx.font = "25px Helvetica";
+    ctx.fillStyle = "#4d4e53";
+    ctx.fillText("I'VE GOT THE POWER, LETS GO HOME", 20, 35);
+  };
+  
   //Method to be overriden on the engine to launch main method
   this.launch = function() {};
   
@@ -165,7 +204,7 @@ var Game = function() {
     var myGame = this;  
 
     myGame.ctx.font = "48px Impact";
-    myGame.ctx.fillStyle = "#ffffff";
+    myGame.ctx.fillStyle = "#f5f5f5";
     myGame.ctx.strokeStyle = "#000000";
     myGame.ctx.lineWidth = 2;
 
@@ -181,7 +220,6 @@ var Game = function() {
       ctx.strokeText("SELECT YOUR CHARACTER",startPosition, 70);
 
       for(var i=0; i<myGame.characters.length; i++) {
-
         var image = new Image();
         image.character = myGame.characters[i];
         image.onload = function() {
@@ -191,7 +229,6 @@ var Game = function() {
           startPosition = startPosition + 101;
         };
         image.src = image.character.pic;
-
       }
 
       ctx.fillText("SELECT LEVEL",startPosition, 312);
@@ -281,12 +318,13 @@ Enemy.prototype.update = function(dt) {
     this.x = this.x + 101 * dt * this.multiplier;
     
     //If an enemy position and a player occurs 
-    //then reset the player position    
+    //then reset the player position and put the star back   
     if(this.y === player.y && (this.x >= (player.x-50)) && (this.x <= (player.x+50))) 
     {
+      player.hasStar = false;
       player.x= 0;
       player.y= 487;
-    }    
+    }
 };
 
 // Draw the enemy on the screen, required method for game
@@ -312,7 +350,7 @@ var Player = function() {
     var coor = {
       x: this.x, 
       y: this.y
-    };    
+    };
     
     return coor;
   };
@@ -340,38 +378,52 @@ var Player = function() {
 
     if(key === "right" && this.x !== 909 && this.isValid(game.invalidRightCoordinates)) {
       this.x = this.x + 101;
-    }    
+    }
   };
   
   //check the player position for the star
-  this.update = function() {
-    
-    if(!this.isValid(game.winningCoordinates) && this.hasStar) {  
-      this.goHome();
-      game.stop();      
-      game.render();
+  this.update = function() {    
+    //Render banners    
+    if(this.hasStar) {
+      game.powerBanner();  
+    }
+    else
+    {
+      game.banner();
     }
     
+    //If you've got the star set star true to render the player with the star
+    if(!this.isValid(game.starCoordinates) && this.hasStar == false) {
+      player.hasStar = true;
+    }
+    
+    //If you've won go back to 
+    //main menu and put star back to the top
+    if(!this.isValid(game.winningCoordinates) && this.hasStar) {  
+      this.hasStar = false;
+      this.goHome();
+      game.stop();
+      game.render();
+    }    
   };
   
   //Render player on the screen
   this.render = function(){
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-    
+    if(this.hasStar) {
+      ctx.drawImage(Resources.get("images/Star.png"), this.x, this.y + 70, 50, 85);
+    }
   };
   
   //Check coordinates to make sure is valid
-  this.isValid = function(coordinates) {
-                
+  this.isValid = function(coordinates) {                
       for(var i=0; i<coordinates.length; i++) {
         if( this.x === coordinates[i].x && this.y === coordinates[i].y ) {
           return false;
         }
-      }
-    
+      }    
       return true;
-  };
-  
+  };  
 };
 
 // Now instantiate your objects.
