@@ -9,4 +9,4 @@ Star Finder a simple game written in Javascript and HTML5 that takes advantage o
 Rendered interface with HTML5 Canvas and defined functionality with OOP Javascript, three classes to 
 control the game **Game**, **Enemy** and **Player**
 
-See the game running [here]: https://lsardinas.github.io/Udacity-StarFinder/
+See the game running [here](https://lsardinas.github.io/Udacity-StarFinder/)
