@@ -1,9 +1,10 @@
 /**
-* @description class that implements game main menu,
+* @description class that implements game main menu
 * characters, difficulty levels, invalid coordinates,
 * star coordinates and winning coordinates
+* @constructor
 **/
-var Game = function() {  
+var Game = function() {
   /**
   * @description list of available characters
   * @return array of character objects
@@ -131,7 +132,7 @@ var Game = function() {
     y:487
   }];
   
-  this.isRunning = true;
+  this.isRunning = false;
   
   /**
   * @description find single character object by Id
@@ -139,9 +140,9 @@ var Game = function() {
   * @return character object
   **/
   this.findCharacter = function(id) {
-    for(var i=0; i< this.characters.length; i++) {
-      if(this.characters[i].id.toLowerCase() === id.toLowerCase()) {
-        return this.characters[i];
+    for(var i=0; i< this.characters.length; i++) {            
+      if(this.characters[i].id.toLowerCase() === id.toLowerCase()) { 
+        return this.characters[i]; 
       }
     }
     return undefined;
@@ -161,8 +162,10 @@ var Game = function() {
     return undefined;  
   };
   
-  
-  this.handleInput = function(key) {
+  /**
+  * @description handle key input on main menu  
+  **/
+  this.handleInput = function(key) {    
     var character = this.findCharacter(key);
     var level = this.findLevel(key);
 
@@ -190,72 +193,80 @@ var Game = function() {
     if(key.toLowerCase() === "escape") {      
       this.stop();
       this.render();
-    }
+    }    
   };
   
-  //Stop game
+  /**
+  * @description Stop the game from running, usually to display the main menu
+  **/
   this.stop = function() {
-    ctx.clearRect(0,0, game.width, game.height);
     this.isRunning = false;
-  }
+    ctx.clearRect(0,0, game.width, game.height);    
+  };
   
-  //Start game
+  /**
+  * @description Start the game usually to run the game
+  **/
   this.start = function() {
     this.isRunning = true;    
-  }
+  };
   
-  
+  /**
+  * @description Draw regular banner at the top of the canvas
+  **/
   this.banner = function() {
     ctx.fillStyle = "#fff4cc";
     ctx.fillRect(0,0, 1010, 50);
-
     ctx.fillStyle = "#ffe070";
     ctx.fillRect(0,0, 10, 50);
-
     ctx.fillStyle = "#ffe070";
-    ctx.fillRect(1000, 0, 10, 50);
-    
+    ctx.fillRect(1000, 0, 10, 50);    
     ctx.font = "bold 25px Helvetica";
     ctx.fillStyle = "#4d4e53";
     ctx.fillText("GET THE POWER OF THE STAR AND BRING IT HOME", 20, 35);
   };
   
+  /**
+  * @description Draw power banner to instruct the user what to do
+  **/
   this.powerBanner = function() {
     ctx.fillStyle = "#fff4cc";
     ctx.fillRect(0,0, 1010, 50);
-
     ctx.fillStyle = "#ffe070";
     ctx.fillRect(0,0, 10, 50);
-
     ctx.fillStyle = "#ffe070";
-    ctx.fillRect(1000, 0, 10, 50);
-    
+    ctx.fillRect(1000, 0, 10, 50);    
     ctx.font = "bold 25px Helvetica";
     ctx.fillStyle = "#4d4e53";
     ctx.fillText("I'VE GOT THE POWER, LETS GO HOME", 20, 35);
   };
   
-  this.instructionsBanner = function() {
-    
-    var heightPosition = (689 - 20);
-    
+  /**
+  * @description Draw banner with key shortcuts at the bottom of the canvas
+  **/
+  this.instructionsBanner = function() {    
+    var heightPosition = (689 - 20);    
     ctx.fillStyle = "#fff4cc";
     ctx.fillRect(0, heightPosition, 1010, 50);
-
     ctx.fillStyle = "#ffe070";
     ctx.fillRect(0, heightPosition, 10, 50);
-
     ctx.fillStyle = "#ffe070";
-    ctx.fillRect(1000, heightPosition, 10, 50);
-    
+    ctx.fillRect(1000, heightPosition, 10, 50);    
     ctx.font = "bold 15px Helvetica";
     ctx.fillStyle = "#4d4e53";
     ctx.fillText("ESC => MAIN MENU", 20, heightPosition + 15);
   };
+    
+  /**
+  * @description Method overriden at engine js to encapsulate main method and init functionality
+  **/
+  this.launch = function() {
+    // TODO: Override at engine js 
+  };
   
-  //Method to be overriden on the engine to launch main method
-  this.launch = function() {};
-  
+  /**
+  * @description Render main menu on the canvas
+  **/
   this.render = function() {
     //Defined this of Game
     var myGame = this;      
@@ -350,12 +361,15 @@ var Enemy = function() {
     this.sprite = 'images/enemy-bug.png';
 
     //Random speed
-    this.multiplier = this.setSpeed();
+    this.speed = this.setSpeed();
 };
 
+/**
+* @description set a random speed of the enemy
+**/
 Enemy.prototype.setSpeed = function() {
   return Math.floor((Math.random() * 10) + 1);
-}
+};
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
@@ -365,18 +379,16 @@ Enemy.prototype.update = function(dt) {
     // all computers.
 
     //If it goes off the screen bring back to the left and reset speed
-    if(this.x > 1060) {
-      //
+    if(this.x > 1060) {      
       this.x = -101;
-      this.multiplier = this.setSpeed();
+      this.speed = this.setSpeed();
     }
     
-    this.x = this.x + 101 * dt * this.multiplier;
-    
+    this.x = this.x + 101 * this.speed * dt;
+      
     //If an enemy position and a player occurs 
     //then reset the player position and put the star back   
-    if(this.y === player.y && (this.x >= (player.x-50)) && (this.x <= (player.x+50))) 
-    {
+    if(this.y === player.y && (this.x >= (player.x-50)) && (this.x <= (player.x+50))) {
       player.hasStar = false;
       player.x= 0;
       player.y= 487;
@@ -392,8 +404,12 @@ Enemy.prototype.render = function() {
 // This class requires an update(), render() and
 // a handleInput() method.
 
-//Create Player class I dont see a reason why prototype would be useful 
-//as there will always be a single player class
+/**
+* @description Create player handle its input and render on the screen
+* create Player class I dont see a reason why prototype would be useful 
+* as there will always be a single player class
+* @constructor
+**/
 var Player = function() {
   //Default values
   this.x = 0;
@@ -401,7 +417,9 @@ var Player = function() {
   this.sprite = 'images/char-cat-girl.png';
   this.hasStar = false;
   
-  //Return player coordinates object
+  /**
+  * @description Return coordinates of the player
+  **/
   this.coordinates = function() {
     var coor = {
       x: this.x, 
@@ -411,14 +429,17 @@ var Player = function() {
     return coor;
   };
   
-  //Return player home
+  /**
+  * @description change position of the player to home
+  **/
   this.goHome = function() {
     this.x = 0;
     this.y = 487;
-  }
+  };
   
-  //Manage player movement and prevent the player 
-  //to move when agains objects 
+  /**
+  * @description Handle input of the player and prevent movement beyond borders and invalid coordinates
+  **/
   this.handleInput = function(key) {
     if(key === "up" && this.y !== 72 && this.isValid(game.invalidUpCoordinates)) {      
       this.y = this.y - 83;
@@ -437,7 +458,9 @@ var Player = function() {
     }
   };
   
-  //check the player position for the star
+  /**
+  * @description Update game banners and check if the player has won
+  **/
   this.update = function() {    
     if(game.isRunning) {        
       //Render banners    
@@ -465,7 +488,9 @@ var Player = function() {
     }
   };
   
-  //Render player on the screen
+  /**
+  * @description Render player in its position and render star if it has it
+  **/
   this.render = function(){
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
     if(this.hasStar) {
@@ -473,7 +498,11 @@ var Player = function() {
     }
   };
   
-  //Check coordinates to make sure is valid
+  /**
+  * @description check coordinates list, return false if player is on them, true if not
+  * @param {array} coordinates
+  * @return boolean
+  **/
   this.isValid = function(coordinates) {                
       for(var i=0; i<coordinates.length; i++) {
         if( this.x === coordinates[i].x && this.y === coordinates[i].y ) {
@@ -481,19 +510,19 @@ var Player = function() {
         }
       }    
       return true;
-  };  
+  };
 };
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
-var game = new Game();
-var player = new Player();
-var allEnemies = [];
 
 //I've created the enemies in the engine class
 //to be able to modify the number of enemies based
 //on the difficulty
+var game = new Game();
+var player = new Player();
+var allEnemies = [];
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
@@ -504,10 +533,7 @@ document.addEventListener('keyup', function(e) {
       39: 'right',
       40: 'down'
   };
-
-  // Pass down key
-  game.handleInput(e.key);
-
-  // Just to avoid the error
+      
+  game.handleInput(e.key);  
   player.handleInput(allowedKeys[e.keyCode]);
 });
