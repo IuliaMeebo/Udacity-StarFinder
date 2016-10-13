@@ -1,3 +1,5 @@
+'use strict';
+
 /**
 * @description class that implements game main menu
 * characters, difficulty levels, invalid coordinates,
@@ -140,7 +142,7 @@ var Game = function() {
   * @return character object
   **/
   this.findCharacter = function(id) {
-    for(var i=0; i< this.characters.length; i++) {            
+    for(var i=0, l=this.characters.length; i<l; i++) {
       if(this.characters[i].id.toLowerCase() === id.toLowerCase()) { 
         return this.characters[i]; 
       }
@@ -154,7 +156,7 @@ var Game = function() {
   * @return level object
   **/
   this.findLevel = function(id) {
-    for(var i=0; i< this.levels.length; i++) {
+    for(var i=0, l=this.levels.length; i<l; i++) {
       if(this.levels[i].id.toLowerCase() === id.toLowerCase()) {
         return this.levels[i];
       }
@@ -286,7 +288,7 @@ var Game = function() {
       myGame.ctx.fillText("SELECT YOUR CHARACTER",startPosition, 70);
       myGame.ctx.strokeText("SELECT YOUR CHARACTER",startPosition, 70);
 
-      for(var i=0; i<myGame.characters.length; i++) {
+      for(var i=0, l=myGame.characters.length; i<l; i++) {
         var image = new Image();
         image.character = myGame.characters[i];
         image.onload = function() {
@@ -504,7 +506,7 @@ var Player = function() {
   * @return boolean
   **/
   this.isValid = function(coordinates) {                
-      for(var i=0; i<coordinates.length; i++) {
+      for(var i=0, l=coordinates.length; i<l; i++) {
         if( this.x === coordinates[i].x && this.y === coordinates[i].y ) {
           return false;
         }
