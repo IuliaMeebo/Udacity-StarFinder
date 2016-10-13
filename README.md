@@ -3,3 +3,8 @@
 **Description**
 
 Star Finder a simple game written in Javascript and HTML5 that takes advantage of Canvas element. 
+
+**Technologies**
+
+Rendered interface with HTML5 Canvas and defined functionality with OOP Javascript, three classes to 
+control the game **Game**, **Enemy** and **Player**
